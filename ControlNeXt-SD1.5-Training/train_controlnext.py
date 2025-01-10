@@ -134,8 +134,14 @@ def log_validation(
     inference_ctx = contextlib.nullcontext() if is_final_validation else torch.autocast("cuda")
 
     for validation_prompt, validation_image in zip(validation_prompts, validation_images):
-        validation_image = Image.open(validation_image).convert("RGB")
-
+        validation_image = np.array(Image.open(validation_image))
+        validation_mask = np.array(Image.open(validation_image.replace("image","mask")))
+        mask_np = 1 - (validation_mask /255)[:,:]
+        mask_np = np.stack([mask_np,mask_np,mask_np], axis=2).astype(np.uint8)
+        masked_image = validation_image * mask_np
+        validation_np_image = np.dstack((masked_image, validation_mask[:,:,None]))
+        validation_image = Image.fromarray(validation_np_image, mode='RGBA')
+        
         images = []
 
         for _ in range(args.num_validation_images):
