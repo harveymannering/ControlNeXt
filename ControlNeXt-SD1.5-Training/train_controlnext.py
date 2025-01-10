@@ -168,7 +168,7 @@ def log_validation(
             validation_image = log["validation_image"]
 
             formatted_images = []
-            formatted_images.append(np.asarray(validation_image))
+            formatted_images.append(masked_image)
             for image in images:
                 formatted_images.append(np.asarray(image))
             formatted_images = np.concatenate(formatted_images, 1)
