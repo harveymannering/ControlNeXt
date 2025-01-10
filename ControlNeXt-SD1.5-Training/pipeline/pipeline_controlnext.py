@@ -578,7 +578,8 @@ class StableDiffusionControlNeXtPipeline(
         do_classifier_free_guidance=False,
         guess_mode=False,
     ):
-        image = self.control_image_processor.preprocess(image, height=height, width=width).to(dtype=torch.float32)
+        #image = self.control_image_processor.preprocess(image, height=height, width=width).to(dtype=torch.float32)
+        image = torch.tensor(np.array(image)).to(dtype=torch.float32)
         image_batch_size = image.shape[0]
 
         if image_batch_size == 1:
@@ -593,7 +594,7 @@ class StableDiffusionControlNeXtPipeline(
 
         if do_classifier_free_guidance and not guess_mode:
             image = torch.cat([image] * 2)
-
+        .view(-1,4,512,512)
         return image
 
     # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableDiffusionPipeline.prepare_latents
