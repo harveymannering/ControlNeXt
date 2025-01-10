@@ -594,7 +594,7 @@ class StableDiffusionControlNeXtPipeline(
 
         if do_classifier_free_guidance and not guess_mode:
             image = torch.cat([image] * 2)
-        .view(-1,4,512,512)
+        image = image.view(-1,4,512,512)
         return image
 
     # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableDiffusionPipeline.prepare_latents
