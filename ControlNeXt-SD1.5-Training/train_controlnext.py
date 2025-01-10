@@ -719,11 +719,21 @@ def make_train_dataset(args, tokenizer, accelerator):
 
     def preprocess_train(examples):
         images = [image.convert("RGB") for image in examples[image_column]]
+        conditioning_images = [image for image in examples[conditioning_image_column]]
+
+        for idx in range(len(images):
+            i = np.array(images[idx])
+            m = np.array(conditioning_images[idx])
+            mask_np = 1 - (m /255)[:,:]
+            mask_np = np.stack([mask_np,mask_np,mask_np], axis=2).astype(np.uint8)
+            masked_image = i * mask_np
+            validation_np_image = np.dstack((masked_image, m[:,:,None]))
+            conditioning_image = Image.fromarray(validation_np_image, mode='RGBA')
+            conditioning_images[idx] = conditioning_image
+
         images = [image_transforms(image) for image in images]
-
-        conditioning_images = [image.convert("RGB") for image in examples[conditioning_image_column]]
         conditioning_images = [conditioning_image_transforms(image) for image in conditioning_images]
-
+        
         examples["pixel_values"] = images
         examples["conditioning_pixel_values"] = conditioning_images
         examples["input_ids"] = tokenize_captions(examples)
