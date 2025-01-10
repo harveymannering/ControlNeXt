@@ -721,7 +721,7 @@ def make_train_dataset(args, tokenizer, accelerator):
         images = [image.convert("RGB") for image in examples[image_column]]
         conditioning_images = [image for image in examples[conditioning_image_column]]
 
-        for idx in range(len(images):
+        for idx in range(len(images)):
             i = np.array(images[idx])
             m = np.array(conditioning_images[idx])
             mask_np = 1 - (m /255)[:,:]
